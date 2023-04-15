@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/dropbox-explorer-api/static/css/main.b5320759.css",
+    "main.js": "/dropbox-explorer-api/static/js/main.48365003.js",
+    "index.html": "/dropbox-explorer-api/index.html",
+    "main.b5320759.css.map": "/dropbox-explorer-api/static/css/main.b5320759.css.map",
+    "main.48365003.js.map": "/dropbox-explorer-api/static/js/main.48365003.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.b5320759.css",
+    "static/js/main.48365003.js"
+  ]
+}
