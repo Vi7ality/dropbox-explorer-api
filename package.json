@@ -2,6 +2,7 @@
   "name": "dropbox-explorer-api",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://Vi7ality.github.io/dropbox-explorer-api/",
   "dependencies": {
     "@craco/craco": "^7.1.0",
     "@testing-library/jest-dom": "^5.16.5",
