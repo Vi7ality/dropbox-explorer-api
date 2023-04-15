@@ -2,7 +2,7 @@ import { Dropbox } from 'dropbox';
 import { Notify } from 'notiflix';
 
 const DB_TOKEN =
-  'sl.Bcg_9FhOAKKxoDL71vg0Ksz_CeRbnGjVp1YiWXPSp5vX8ZTEyUfidjxz_TujxqhI5WRR8mfqdRkwEflfmvixsNxB_Umag1EgNA9FEg5PnmIWufUt4RFN7faS-2nAPS-ruWl08XQ';
+  'sl.Bcm-EPzlYXdBhRywUUAaplL0JIT_u_4u7cSGMerJOZ6QJEUcaiGxHf8pqiwPaNN8ZSZcJDlQiTDJswqMmWtzNlf6R-sTSN2UQ0AcPoSyPI1rYmW2-pUjgFSVHoNXjNn9-7NpnayK';
 
 const dbx = new Dropbox({
   accessToken: DB_TOKEN,

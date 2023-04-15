@@ -1,6 +1,7 @@
 import { Container } from 'reusableComponents/Container/Container.styled';
-import { Header, NavList } from './Toolbar.styled';
+import { Header, NavItem, NavList, Navigation, Stub, StubItem } from './Toolbar.styled';
 import { Notify } from 'notiflix';
+import { StyledButton } from 'reusableComponents/Button/Button.styled';
 
 export const Toolbar = ({ setCurrentPath, currentPath }) => {
   const handleStubClick = () => {
@@ -9,10 +10,10 @@ export const Toolbar = ({ setCurrentPath, currentPath }) => {
   return (
     <Header>
       <Container>
-        <nav>
+        <Navigation>
           <NavList>
-            <li>
-              <button
+            <NavItem>
+              <StyledButton
                 onClick={() =>
                   setCurrentPath(
                     currentPath.substring(0, currentPath.lastIndexOf('/'))
@@ -20,19 +21,22 @@ export const Toolbar = ({ setCurrentPath, currentPath }) => {
                 }
               >
                 Back
-              </button>
-            </li>
-            <li>
-              <button onClick={() => setCurrentPath('')}>Main</button>
-            </li>
-            <li>
-              <button onClick={() => handleStubClick()}>User</button>
-            </li>
-            <li>
-              <button onClick={() => handleStubClick()}>Options</button>
-            </li>
+              </StyledButton>
+            </NavItem>
+            <NavItem>
+              <StyledButton onClick={() => setCurrentPath('')}>Main</StyledButton>
+            </NavItem>
+
           </NavList>
-        </nav>
+          <NavList>
+                   <StubItem>
+              <Stub onClick={() => handleStubClick()}>User</Stub>
+            </StubItem>
+            <StubItem>
+              <Stub onClick={() => handleStubClick()}>Options</Stub>
+            </StubItem>
+            </NavList>
+        </Navigation>
       </Container>
     </Header>
   );

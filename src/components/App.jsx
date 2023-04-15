@@ -18,8 +18,8 @@ export const App = () => {
       }));
   };
 
-  const handleFolderClick = folder => {
-    setCurrentPath(folder.path_lower);
+  const handleFolderClick = path => {
+    setCurrentPath(path);
   };
 
   useEffect(() => {

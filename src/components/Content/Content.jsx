@@ -1,7 +1,9 @@
-import { AiFillFile, AiFillFolder } from 'react-icons/ai';
+import { File } from 'components/File/File';
+import { Folder } from 'components/Folder/Folder';
 import { Container } from 'reusableComponents/Container/Container.styled';
 import Loader from 'reusableComponents/Loader/Loader.styled';
 import { getFile } from 'services/dropbox/dropboxService';
+import { ContentItem, ContentList, PathWrap, Title } from './Content.styled';
 
 export const Content = ({
   currentPath,
@@ -9,57 +11,54 @@ export const Content = ({
   handleFolderClick,
   isLoading,
 }) => {
-      const handleFileClick = async (path) => {
-          const fileContent = await getFile(path);
-          console.log(fileContent)
+  const handleFileClick = async path => {
+    const fileContent = await getFile(path);
+    console.log(fileContent);
     const fileUrl = URL.createObjectURL(fileContent);
     window.open(fileUrl, '_blank');
   };
   return (
     <main>
       <Container>
-        <h2>File Explorer</h2>
+        <Title>File Explorer</Title>
         {isLoading ? (
           <Loader />
         ) : (
           <>
-            <div>
-              <span>{currentPath}</span>
-            </div>
-            <ul>
+            <PathWrap>
+              <span>Path: {currentPath ? currentPath : '/'}</span>
+            </PathWrap>
+            <ContentList>
               {!files ? (
                 <p>This folder is empty</p>
               ) : (
                 files.map(file => {
                   const type = file['.tag'];
                   return (
-                    <li
+                    <ContentItem
                       key={file.id}
                       style={{ display: 'flex', alignItems: 'center' }}
                     >
-                      {type === 'file' && file.thumbnail && (
-                              <button onClick={()=>handleFileClick(file.path_lower)}>
-                              <img
-                          alt="file.name"
-                          src={`data:image/jpeg;base64, ${file.thumbnail}`}
-                        ></img><p>{file.name}</p></button>
+                      {type === 'file' && (
+                        <File
+                          name={file.name}
+                          thumbnail={file.thumbnail}
+                          path={file.path_lower}
+                          handleFileClick={handleFileClick}
+                        ></File>
                       )}
-                      {type === 'file' && !file.thumbnail && <button onClick={()=>handleFileClick(file.path_lower)}><AiFillFile /><p>{file.name}</p></button>}
-                      {type === 'folder' && (      
-                          <button
-                            onClick={() => {
-                              handleFolderClick(file);
-                            }}
-                                  >
-                                      <AiFillFolder />
-                            <p>{file.name}</p>
-                          </button>
+                      {type === 'folder' && (
+                        <Folder
+                          handleFolderClick={handleFolderClick}
+                          name={file.name}
+                          path={file.path_lower}
+                        ></Folder>
                       )}
-                    </li>
+                    </ContentItem>
                   );
                 })
               )}
-            </ul>
+            </ContentList>
           </>
         )}
       </Container>
