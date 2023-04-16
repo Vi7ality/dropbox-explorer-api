@@ -1,8 +1,7 @@
 import { Dropbox } from 'dropbox';
 import { Notify } from 'notiflix';
 
-const DB_TOKEN =
-  'sl.Bcm-EPzlYXdBhRywUUAaplL0JIT_u_4u7cSGMerJOZ6QJEUcaiGxHf8pqiwPaNN8ZSZcJDlQiTDJswqMmWtzNlf6R-sTSN2UQ0AcPoSyPI1rYmW2-pUjgFSVHoNXjNn9-7NpnayK';
+const DB_TOKEN = '';
 
 const dbx = new Dropbox({
   accessToken: DB_TOKEN,
