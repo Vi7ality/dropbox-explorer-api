@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
-import { auth, getFiles, getThumbnails } from 'services/dropbox/dropboxService';
+import { getFiles, getThumbnails } from 'services/dropbox/dropboxService';
 import Toolbar from './Toolbar';
 import Content from './Content';
 import { Notify } from 'notiflix';
+import { checkAuthorization} from 'services/dropbox/dbxAuth';
 
 export const App = () => {
   const [files, setFiles] = useState(null);
   const [currentPath, setCurrentPath] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [authorized, setAuthorized] = useState(false);
 
   const getPaths = files => {
     return files
@@ -22,11 +24,15 @@ export const App = () => {
     setCurrentPath(path);
   };
 
+    useEffect(() => {
+    checkAuthorization().then((result) => setAuthorized(result));
+  }, []);
+
+
   useEffect(() => {
     const init = async () => {
       try {
         setIsLoading(true);
-        await auth();
         const data = await getFiles(currentPath);
         const files = data.result.entries;
         console.log(files);
@@ -64,7 +70,7 @@ export const App = () => {
   }, [currentPath]);
 
   return (
-    <div>
+    <>
       <Toolbar
         setCurrentPath={setCurrentPath}
         currentPath={currentPath}
@@ -75,6 +81,6 @@ export const App = () => {
         handleFolderClick={handleFolderClick}
         isLoading={isLoading}
       ></Content>
-    </div>
+    </>
   );
 };

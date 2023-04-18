@@ -1,29 +1,17 @@
 import { Dropbox } from 'dropbox';
 import { Notify } from 'notiflix';
 
-const DB_TOKEN = '';
+const REDIRECT_URI = 'http://localhost:3000/dropbox-explorer-api';
 
-const dbx = new Dropbox({
-  accessToken: DB_TOKEN,
-});
+const dbx = new Dropbox({ accessToken: localStorage.getItem('dropboxToken') });
 
-export const auth = async () => {
+export const finishAuth = async () => {
   try {
-    await dbx.usersGetCurrentAccount();
+    const accessToken = await dbx.auth.getAccessTokenFromUrl(REDIRECT_URI);
+    dbx.setAccessToken(accessToken);
     return true;
   } catch (err) {
-    if (err.status === 401) {
-      try {
-        const authUrl = await dbx.getAuthenticationUrl(
-          'http://localhost:3000/dropbox-browser_test-task'
-        );
-        window.location.href = authUrl;
-      } catch (err) {
-        console.error('Error authenticating with Dropbox:', err);
-      }
-    } else {
-      console.error('Error getting Dropbox account information:', err);
-    }
+    console.error('Error finishing Dropbox authentication:', err);
     return false;
   }
 };
