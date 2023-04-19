@@ -11,24 +11,25 @@ export const checkAuthorization = async () => {
     if (!localToken) {
       const accessToken = getTokenFromURLParams();
       if (!accessToken) {
-        makeAuth();
-        return;
+        return false;
       } else {
         setAndSaveToken(accessToken);
+        return true;
       }
     }
-    await dbx.auth.setAccessToken(localToken);
+    await dbx.auth.checkAndRefreshAccessToken(localToken);
+    return true;
   } catch (err) {
     Notify.failure(err.message);
   }
 };
 
-const getTokenFromURLParams = () => {
+export const getTokenFromURLParams = () => {
   const params = new URLSearchParams(window.location.hash.substr(1));
   return params.get('access_token');
 };
 
-const makeAuth = async () => {
+export const makeAuth = async () => {
   try {
     const authUrl = await dbx.auth.getAuthenticationUrl(REDIRECT_URI);
     window.location.href = authUrl;
@@ -58,56 +59,3 @@ export const checkCode = async () => {
     console.error('Error getting access token:');
   }
 };
-
-// const isAuthorized = async () => {
-//   try {
-//     const accountInfo = await dbx.usersGetCurrentAccount();
-//     return !!accountInfo;
-//   } catch (err) {
-//     if (err.status === 401) {
-//       const authUrl = dbx.auth.getAuthenticationUrl(REDIRECT_URI);
-//       window.location.href = authUrl;
-//     } else {
-//       console.error('Error checking Dropbox authorization:', err);
-//     }
-//     return false;
-//   }
-// };
-
-// export const checkAuthorization = async () => {
-//   const authorized = await isAuthorized();
-//   if (!authorized) {
-//     const authUrl = await dbx.auth.getAuthenticationUrl(REDIRECT_URI);
-//     window.location.href = authUrl;
-//   }
-//   const token = await dbx.auth.getAccessTokenFromCode(REDIRECT_URI);
-//   console.log(`token:`, token);
-// };
-
-// export const checkAuthorization = async () => {
-//   const authorized = await isAuthorized();
-//   if (!authorized) {
-//     const accessToken = await dbx.auth.getAccessTokenFromUrl(REDIRECT_URI);
-//     if (accessToken) {
-//       localStorage.setItem('dropboxAccessToken', accessToken);
-//       dbx.setAccessToken(accessToken);
-//       return true;
-//     } else {
-//       const authUrl = dbx.auth.getAuthenticationUrl(REDIRECT_URI);
-//       window.location.href = authUrl;
-//     }
-//   } else {
-//     return true;
-//   }
-// };
-
-// export const checkAuthorization = async () => {
-//   const token = dbx.auth.getAccessToken();
-//   console.log(token);
-//   if (!token) {
-//     const authUrl = await dbx.auth.getAuthenticationUrl(REDIRECT_URI);
-//     window.location.href = authUrl;
-//     dbx.auth.setAccessToken(await dbx.auth.getAccessToken());
-//   } else {
-//   }
-// };

@@ -4,19 +4,26 @@ import { Container } from 'reusableComponents/Container/Container.styled';
 import Loader from 'reusableComponents/Loader/Loader.styled';
 import { getFile } from 'services/dropbox/dropboxService';
 import { ContentItem, ContentList, PathWrap, Title } from './Content.styled';
+import { StyledButton } from 'reusableComponents/Button/Button.styled';
+import { makeAuth } from 'services/dropbox/dbxAuth';
 
 export const Content = ({
   currentPath,
   files,
   handleFolderClick,
   isLoading,
+  isAuthorized,
 }) => {
   const handleFileClick = async path => {
     const fileContent = await getFile(path);
-    console.log(fileContent);
     const fileUrl = URL.createObjectURL(fileContent);
     window.open(fileUrl, '_blank');
   };
+
+  const handleAuthBtnClick = async () => {
+    makeAuth();
+  }
+  
   return (
     <main>
       <Container>
@@ -24,8 +31,9 @@ export const Content = ({
         {isLoading ? (
           <Loader />
         ) : (
-          <>
-            <PathWrap>
+            <>
+              {!isAuthorized ? (<><p>Please, provide access to your Dropbox account.</p><StyledButton onClick={() => { handleAuthBtnClick() }}>Authorize</StyledButton></>) : <>
+              <PathWrap>
               <span>Path: {currentPath ? currentPath : '/'}</span>
             </PathWrap>
             <ContentList>
@@ -58,7 +66,8 @@ export const Content = ({
                   );
                 })
               )}
-            </ContentList>
+            </ContentList></>}
+            
           </>
         )}
       </Container>

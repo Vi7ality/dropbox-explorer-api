@@ -9,7 +9,7 @@ export const App = () => {
   const [files, setFiles] = useState(null);
   const [currentPath, setCurrentPath] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [authorized, setAuthorized] = useState(false);
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
   const getPaths = files => {
     return files
@@ -25,7 +25,7 @@ export const App = () => {
   };
 
     useEffect(() => {
-    checkAuthorization().then((result) => setAuthorized(result));
+    checkAuthorization().then((result) => setIsAuthorized(result));
   }, []);
 
 
@@ -65,9 +65,9 @@ export const App = () => {
         setFiles(newStateFiles);
       });
     };
-
-    init();
-  }, [currentPath]);
+    isAuthorized && init();
+    
+  }, [currentPath, isAuthorized]);
 
   return (
     <>
@@ -76,6 +76,7 @@ export const App = () => {
         currentPath={currentPath}
       ></Toolbar>
       <Content
+        isAuthorized={isAuthorized}
         currentPath={currentPath}
         files={files}
         handleFolderClick={handleFolderClick}

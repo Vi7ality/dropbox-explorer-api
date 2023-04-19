@@ -1,20 +1,10 @@
 import { Dropbox } from 'dropbox';
 import { Notify } from 'notiflix';
+import { getTokenFromURLParams } from './dbxAuth';
 
-const REDIRECT_URI = 'http://localhost:3000/dropbox-explorer-api';
-
-const dbx = new Dropbox({ accessToken: localStorage.getItem('dropboxToken') });
-
-export const finishAuth = async () => {
-  try {
-    const accessToken = await dbx.auth.getAccessTokenFromUrl(REDIRECT_URI);
-    dbx.setAccessToken(accessToken);
-    return true;
-  } catch (err) {
-    console.error('Error finishing Dropbox authentication:', err);
-    return false;
-  }
-};
+const dbx = new Dropbox({
+  accessToken: localStorage.getItem('dropboxToken') || getTokenFromURLParams(),
+});
 
 export const getFiles = async (path = '') => {
   try {
