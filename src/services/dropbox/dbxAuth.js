@@ -1,7 +1,6 @@
 import { Dropbox } from 'dropbox';
 import { Notify } from 'notiflix';
 const APP_KEY = 'vq4cbzcxcd6v3uz';
-const REDIRECT_URI = 'http://localhost:3000/dropbox-explorer-api';
 
 const dbx = new Dropbox({ clientId: APP_KEY });
 
@@ -31,7 +30,8 @@ export const getTokenFromURLParams = () => {
 
 export const makeAuth = async () => {
   try {
-    const authUrl = await dbx.auth.getAuthenticationUrl(REDIRECT_URI);
+    const currentUrl = window.location.href;
+    const authUrl = await dbx.auth.getAuthenticationUrl(currentUrl);
     window.location.href = authUrl;
   } catch (err) {
     Notify.failure(err.message);
@@ -44,18 +44,5 @@ const setAndSaveToken = async token => {
     localStorage.setItem('dropboxToken', token);
   } catch (err) {
     Notify.failure(err.message);
-  }
-};
-
-export const checkCode = async () => {
-  const params = new URLSearchParams(window.location.hash.substr(1));
-  const accessToken = params.get('access_token');
-  console.log('token:', accessToken);
-
-  if (accessToken) {
-    await dbx.auth.setAccessToken(accessToken);
-    localStorage.setItem('dropboxToken', accessToken);
-  } else {
-    console.error('Error getting access token:');
   }
 };

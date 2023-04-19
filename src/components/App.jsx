@@ -31,19 +31,19 @@ export const App = () => {
 
   useEffect(() => {
     const init = async () => {
+      setIsLoading(true);
       try {
-        setIsLoading(true);
         const data = await getFiles(currentPath);
         const files = data.result.entries;
-        console.log(files);
-
+    
         if (files.length === 0) {
-          setFiles(null);
+          setFiles(null)
           setIsLoading(false);
           return;
         }
 
-        updateFiles(files);
+        setFiles(files);
+        setThumbnails(files);
         setIsLoading(false);
       } catch (error) {
         Notify.failure(error.message);
@@ -51,13 +51,19 @@ export const App = () => {
       }
     };
 
-    const updateFiles = async files => {
+    const setThumbnails = async files => {
       const paths = getPaths(files);
       const res = await getThumbnails(paths);
+      const thumbnailsArr = res.result.entries;
+
+      if (thumbnailsArr.length === 0) {
+        return;
+      }
+
       const stateFiles = files;
       const newStateFiles = [...stateFiles];
 
-      res.result.entries.forEach(file => {
+      thumbnailsArr.forEach(file => {
         let indexToUpdate = stateFiles.findIndex(
           stateFile => file.metadata.path_lower === stateFile.path_lower
         );
@@ -65,6 +71,7 @@ export const App = () => {
         setFiles(newStateFiles);
       });
     };
+    
     isAuthorized && init();
     
   }, [currentPath, isAuthorized]);
