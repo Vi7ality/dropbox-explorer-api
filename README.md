@@ -1,7 +1,22 @@
-# Getting Started with Create React App
+# Dropbox explorer App
 
 This project was bootstrapped with
 [Create React App](https://github.com/facebook/create-react-app).
+All Dropbox REST API are processed by Dropbox SDK.
+
+The app allow to explore your dropbox storage and download files from the storage.
+
+## Local usage
+To start the app you need initiate `npm start` script in the command line.
+
+## Start Using
+To start using Dropbox explorer App you need to have 
+[Dropbox account](https://www.dropbox.com/). If you have it, please, autorize your account in the app and provide access to your Dropbox storage.
+
+![image](https://user-images.githubusercontent.com/104318952/233376881-6565497d-fa41-43ed-890c-00a248372497.png)
+
+You will then be given access to the cloud storage. 
+
 
 ## Available Scripts
 
