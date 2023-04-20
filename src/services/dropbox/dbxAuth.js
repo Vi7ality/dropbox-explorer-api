@@ -16,7 +16,6 @@ export const checkAuthorization = async () => {
         return true;
       }
     }
-    await dbx.auth.checkAndRefreshAccessToken(localToken);
     return true;
   } catch (err) {
     Notify.failure(err.message);

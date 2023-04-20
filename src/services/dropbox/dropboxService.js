@@ -12,6 +12,9 @@ export const getFiles = async (path = '') => {
       path: path,
     });
   } catch (error) {
+    if (error.status === 401) {
+      localStorage.removeItem('dropboxToken');
+    }
     Notify.failure(error.message);
   }
 };
@@ -31,7 +34,8 @@ export const getFile = async filePath => {
     const response = await dbx.filesDownload({
       path: filePath,
     });
-    return response.result.fileBlob;
+    const blob = response.result.fileBlob;
+    return blob;
   } catch (error) {
     Notify.failure(error.message);
   }

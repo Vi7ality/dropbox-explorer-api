@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const StyledFileBtn = styled.button`
+export const StyledFileLink = styled.a`
   display: flex;
   justify-content: space-between;
 `;

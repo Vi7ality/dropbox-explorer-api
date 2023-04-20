@@ -46,6 +46,9 @@ export const App = () => {
         setThumbnails(files);
         setIsLoading(false);
       } catch (error) {
+            if (error.status === 401) {
+      console.log('401');
+    }
         Notify.failure(error.message);
         setIsLoading(false);
       }

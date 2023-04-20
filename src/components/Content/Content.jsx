@@ -1,9 +1,7 @@
-import { File } from 'components/File/File';
-import { Folder } from 'components/Folder/Folder';
+import { FileList } from 'components/FileList/FileList';
 import { Container } from 'reusableComponents/Container/Container.styled';
 import Loader from 'reusableComponents/Loader/Loader.styled';
-import { getFile } from 'services/dropbox/dropboxService';
-import { AuthMessage, AuthMsgWrap, ContentItem, ContentList, PathWrap, Title } from './Content.styled';
+import { AuthMessage, AuthMsgWrap, PathWrap, Title } from './Content.styled';
 import { StyledButton } from 'reusableComponents/Button/Button.styled';
 import { makeAuth } from 'services/dropbox/dbxAuth';
 
@@ -14,60 +12,40 @@ export const Content = ({
   isLoading,
   isAuthorized,
 }) => {
-  const handleFileClick = async path => {
-    const fileContent = await getFile(path);
-    const fileUrl = URL.createObjectURL(fileContent);
-    window.open(fileUrl, '_blank');
-  };
-
   const handleAuthBtnClick = async () => {
     makeAuth();
-  }
-  
+  };
+
   return (
     <main>
       <Container>
         <Title>File Explorer</Title>
-        {isLoading ? (
-          <Loader />
+        {!isAuthorized ? (
+          <AuthMsgWrap>
+            <AuthMessage>
+              Please, provide access to your Dropbox account:
+            </AuthMessage>
+            <StyledButton
+              onClick={() => {
+                handleAuthBtnClick();
+              }}
+            >
+              Authorize
+            </StyledButton>
+          </AuthMsgWrap>
         ) : (
-            <>
-              {!isAuthorized ? (<AuthMsgWrap><AuthMessage>Please, provide access to your Dropbox account:</AuthMessage><StyledButton onClick={() => { handleAuthBtnClick() }}>Authorize</StyledButton></AuthMsgWrap>) : <>
-              <PathWrap>
+          <>
+            <PathWrap>
               <span>Path: {currentPath ? currentPath : '/'}</span>
             </PathWrap>
-            <ContentList>
-              {!files ? (
-                <p>This folder is empty</p>
-              ) : (
-                files.map(file => {
-                  const type = file['.tag'];
-                  return (
-                    <ContentItem
-                      key={file.id}
-                      style={{ display: 'flex', alignItems: 'center' }}
-                    >
-                      {type === 'file' && (
-                        <File
-                          name={file.name}
-                          thumbnail={file.thumbnail}
-                          path={file.path_lower}
-                          handleFileClick={handleFileClick}
-                        ></File>
-                      )}
-                      {type === 'folder' && (
-                        <Folder
-                          handleFolderClick={handleFolderClick}
-                          name={file.name}
-                          path={file.path_lower}
-                        ></Folder>
-                      )}
-                    </ContentItem>
-                  );
-                })
-              )}
-            </ContentList></>}
-            
+            {isLoading ? (
+              <Loader />
+            ) : (
+              <FileList
+                files={files}
+                handleFolderClick={handleFolderClick}
+              ></FileList>
+            )}
           </>
         )}
       </Container>

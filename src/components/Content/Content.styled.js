@@ -18,13 +18,3 @@ export const PathWrap = styled.div`
   border-top: 1px solid grey;
   border-bottom: 1px solid grey;
 `;
-
-export const ContentList = styled.ul`
-  padding: 15px;
-`;
-
-export const ContentItem = styled.li`
-  &:not(:last-child) {
-    margin-bottom: 20px;
-  }
-`;
