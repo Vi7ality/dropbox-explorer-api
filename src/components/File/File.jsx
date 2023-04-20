@@ -3,7 +3,7 @@ import {  StyledFileLink } from './File.styled';
 import { useEffect, useState } from 'react';
 import { getFile } from 'services/dropbox/dropboxService';
 
-export const File = ({ name, thumbnail, path, handleFileClick }) => {
+export const File = ({ name, thumbnail, path }) => {
     const [link, setLink] = useState('')
     useEffect(() => {
         const init = async () => {
@@ -12,7 +12,7 @@ export const File = ({ name, thumbnail, path, handleFileClick }) => {
         setLink(blobLink);
         }
         init();
-    }, [handleFileClick, path])
+    }, [path])
   return (
     <StyledFileLink
       href={link}
