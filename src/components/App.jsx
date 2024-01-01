@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getFiles, getThumbnails } from 'services/dropbox/dropboxService';
+import { getFiles, getThumbnails, deleteFile } from 'services/dropbox/dropboxService';
 import Toolbar from './Toolbar';
 import Content from './Content';
 import { Notify } from 'notiflix';
@@ -26,7 +26,13 @@ export const App = () => {
 
     useEffect(() => {
     checkAuthorization().then((result) => setIsAuthorized(result));
-  }, []);
+    }, []);
+  
+  const handleDeleteBtnClick = path => {
+    console.log('delete btn clicked!');
+    deleteFile(path);
+    
+  }
 
 
   useEffect(() => {
@@ -87,6 +93,7 @@ export const App = () => {
         currentPath={currentPath}
         files={files}
         handleFolderClick={handleFolderClick}
+        handleDeleteBtnClick ={handleDeleteBtnClick}
         isLoading={isLoading}
       ></Content>
     </>

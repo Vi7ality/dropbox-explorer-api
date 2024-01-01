@@ -2,7 +2,8 @@ import { FileItem, FileListStyled } from './FileList.styled'
 import { File } from '../File/File'
 import {Folder} from '../Folder/Folder'
 
-export const FileList = ({files, handleFolderClick}) => {
+export const FileList = ({ files, handleFolderClick, handleDeleteBtnClick }) => {
+  
     return (
         <FileListStyled>
                   {!files ? (
@@ -29,6 +30,7 @@ export const FileList = ({files, handleFolderClick}) => {
                               path={file.path_lower}
                             ></Folder>
                           )}
+                          <button onClick={()=>handleDeleteBtnClick(file.path_lower)} style={{marginLeft: '10px', color: 'red'}}>delete</button>
                         </FileItem>
                       );
                     })
