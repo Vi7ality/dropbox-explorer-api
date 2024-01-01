@@ -1,6 +1,7 @@
 import { FileItem, FileListStyled } from './FileList.styled'
 import { File } from '../File/File'
-import {Folder} from '../Folder/Folder'
+import { Folder } from '../Folder/Folder'
+import {MdDeleteForever } from 'react-icons/md'
 
 export const FileList = ({ files, handleFolderClick, handleDeleteBtnClick }) => {
   
@@ -30,7 +31,8 @@ export const FileList = ({ files, handleFolderClick, handleDeleteBtnClick }) => 
                               path={file.path_lower}
                             ></Folder>
                           )}
-                          <button onClick={()=>handleDeleteBtnClick(file.name, type, file.path_lower)} style={{marginLeft: '10px', color: 'red'}}>delete</button>
+                          <button onClick={() => handleDeleteBtnClick(file.name, type, file.path_lower)} style={{ marginLeft: '10px', color: 'red' }}>
+                            <MdDeleteForever/></button>
                         </FileItem>
                       );
                     })
