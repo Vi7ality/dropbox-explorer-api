@@ -50,15 +50,36 @@ export const App = () => {
 
   const updateStateFiles = async () => {
     const data = await getFiles(currentPath);
-        const files = data.result.entries;
-        if (files.length === 0) {
-          setFiles(null);
-          setIsLoading(false);
-          return;
-        }
+    const files = data.result.entries;
+    if (files.length === 0) {
+      setFiles(null);
+      return;
+    }
     setFiles(files);
     return files;
-  }
+  };
+
+  
+    const setThumbnails = async files => {
+      const paths = getPaths(files);
+      const res = await getThumbnails(paths);
+      const thumbnailsArr = res.result.entries;
+
+      if (thumbnailsArr.length === 0) {
+        return;
+      }
+
+      const stateFiles = files;
+      const newStateFiles = [...stateFiles];
+
+      thumbnailsArr.forEach(file => {
+        let indexToUpdate = stateFiles.findIndex(
+          stateFile => file.metadata.path_lower === stateFile.path_lower
+        );
+        newStateFiles[indexToUpdate].thumbnail = file.thumbnail;
+        setFiles(newStateFiles);
+      });
+    };
 
   const handleDeleteBtnClick = async (name, type, path) => {
     const message = notifyDeleteMessage(type);
@@ -69,8 +90,8 @@ export const App = () => {
       'No',
       async () => {
         await deleteFile(path);
-        await updateStateFiles();
-        
+        const files = await updateStateFiles();
+        await setThumbnails(files);
       },
       {}
     );
@@ -80,7 +101,14 @@ export const App = () => {
     const init = async () => {
       setIsLoading(true);
       try {
-        const files = await updateStateFiles();
+        const data = await getFiles(currentPath);
+        const files = data.result.entries;
+        if (files.length === 0) {
+          setFiles(null);
+          setIsLoading(false);
+          return;
+        }
+        setFiles(files);
         setThumbnails(files);
         setIsLoading(false);
       } catch (error) {
