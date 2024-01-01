@@ -9,6 +9,7 @@ export const Content = ({
   currentPath,
   files,
   handleFolderClick,
+  handleDeleteBtnClick,
   isLoading,
   isAuthorized,
 }) => {
@@ -43,7 +44,8 @@ export const Content = ({
             ) : (
               <FileList
                 files={files}
-                handleFolderClick={handleFolderClick}
+                    handleFolderClick={handleFolderClick}
+                    handleDeleteBtnClick={handleDeleteBtnClick}
               ></FileList>
             )}
           </>

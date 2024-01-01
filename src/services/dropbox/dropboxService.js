@@ -40,3 +40,15 @@ export const getFile = async filePath => {
     Notify.failure(error.message);
   }
 };
+
+export const deleteFile = async filePath => {
+  try {
+    const response = await dbx.filesDelete({
+      path: filePath,
+    });
+    const fileName = response.result.name;
+    Notify.success(`${fileName} is successfully deleted`);
+  } catch (error) {
+    Notify.failure(error.message);
+  }
+};
