@@ -33,30 +33,44 @@ export const App = () => {
   }, []);
 
   const notifyDeleteMessage = type => {
-        let message;
+    let message;
     switch (type) {
       case 'file':
-        message = `Do you want to delete this file?`
+        message = `Do you want to delete this file?`;
         break;
-    
+
       case 'folder':
-        message = `Do you want to delete this folder and whole file in it?`
+        message = `Do you want to delete this folder and whole file in it?`;
         break;
       default:
         break;
     }
     return message;
+  };
+
+  const updateStateFiles = async () => {
+    const data = await getFiles(currentPath);
+        const files = data.result.entries;
+        if (files.length === 0) {
+          setFiles(null);
+          setIsLoading(false);
+          return;
+        }
+    setFiles(files);
+    return files;
   }
 
-  const handleDeleteBtnClick = (name, type, path) => {
+  const handleDeleteBtnClick = async (name, type, path) => {
     const message = notifyDeleteMessage(type);
     Confirm.show(
       message,
       `${name}`,
       'Yes',
       'No',
-      () => {
-        deleteFile(path);
+      async () => {
+        await deleteFile(path);
+        await updateStateFiles();
+        
       },
       {}
     );
@@ -66,16 +80,7 @@ export const App = () => {
     const init = async () => {
       setIsLoading(true);
       try {
-        const data = await getFiles(currentPath);
-        const files = data.result.entries;
-
-        if (files.length === 0) {
-          setFiles(null);
-          setIsLoading(false);
-          return;
-        }
-
-        setFiles(files);
+        const files = await updateStateFiles();
         setThumbnails(files);
         setIsLoading(false);
       } catch (error) {
