@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react';
-import { getFiles, getThumbnails, deleteFile } from 'services/dropbox/dropboxService';
+import {
+  getFiles,
+  getThumbnails,
+  deleteFile,
+} from 'services/dropbox/dropboxService';
 import Toolbar from './Toolbar';
 import Content from './Content';
-import { Notify } from 'notiflix';
-import { checkAuthorization} from 'services/dropbox/dbxAuth';
+import { Notify, Confirm } from 'notiflix';
+import { checkAuthorization } from 'services/dropbox/dbxAuth';
 
 export const App = () => {
   const [files, setFiles] = useState(null);
@@ -24,16 +28,39 @@ export const App = () => {
     setCurrentPath(path);
   };
 
-    useEffect(() => {
-    checkAuthorization().then((result) => setIsAuthorized(result));
-    }, []);
-  
-  const handleDeleteBtnClick = path => {
-    console.log('delete btn clicked!');
-    deleteFile(path);
+  useEffect(() => {
+    checkAuthorization().then(result => setIsAuthorized(result));
+  }, []);
+
+  const notifyDeleteMessage = type => {
+        let message;
+    switch (type) {
+      case 'file':
+        message = `Do you want to delete this file?`
+        break;
     
+      case 'folder':
+        message = `Do you want to delete this folder and whole file in it?`
+        break;
+      default:
+        break;
+    }
+    return message;
   }
 
+  const handleDeleteBtnClick = (name, type, path) => {
+    const message = notifyDeleteMessage(type);
+    Confirm.show(
+      message,
+      `${name}`,
+      'Yes',
+      'No',
+      () => {
+        deleteFile(path);
+      },
+      {}
+    );
+  };
 
   useEffect(() => {
     const init = async () => {
@@ -41,9 +68,9 @@ export const App = () => {
       try {
         const data = await getFiles(currentPath);
         const files = data.result.entries;
-    
+
         if (files.length === 0) {
-          setFiles(null)
+          setFiles(null);
           setIsLoading(false);
           return;
         }
@@ -77,9 +104,8 @@ export const App = () => {
         setFiles(newStateFiles);
       });
     };
-    
+
     isAuthorized && init();
-    
   }, [currentPath, isAuthorized]);
 
   return (
@@ -93,7 +119,7 @@ export const App = () => {
         currentPath={currentPath}
         files={files}
         handleFolderClick={handleFolderClick}
-        handleDeleteBtnClick ={handleDeleteBtnClick}
+        handleDeleteBtnClick={handleDeleteBtnClick}
         isLoading={isLoading}
       ></Content>
     </>

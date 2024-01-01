@@ -47,7 +47,8 @@ export const deleteFile = async filePath => {
     const response = await dbx.filesDelete({
       path: filePath,
     });
-    console.log(response);
+    const fileName = response.result.name;
+    Notify.success(`${fileName} is successfully deleted`);
   } catch (error) {
     Notify.failure(error.message);
   }

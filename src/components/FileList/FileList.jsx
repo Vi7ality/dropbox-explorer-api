@@ -30,7 +30,7 @@ export const FileList = ({ files, handleFolderClick, handleDeleteBtnClick }) => 
                               path={file.path_lower}
                             ></Folder>
                           )}
-                          <button onClick={()=>handleDeleteBtnClick(file.path_lower)} style={{marginLeft: '10px', color: 'red'}}>delete</button>
+                          <button onClick={()=>handleDeleteBtnClick(file.name, type, file.path_lower)} style={{marginLeft: '10px', color: 'red'}}>delete</button>
                         </FileItem>
                       );
                     })
