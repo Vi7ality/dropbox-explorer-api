@@ -42,7 +42,6 @@ export const getFile = async filePath => {
 };
 
 export const deleteFile = async filePath => {
-  console.log(filePath);
   try {
     const response = await dbx.filesDelete({
       path: filePath,
