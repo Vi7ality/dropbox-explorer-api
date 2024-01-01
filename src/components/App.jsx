@@ -4,10 +4,11 @@ import {
   getThumbnails,
   deleteFile,
 } from 'services/dropbox/dropboxService';
-import Toolbar from './Toolbar';
 import Content from './Content';
 import { Notify, Confirm } from 'notiflix';
 import { checkAuthorization } from 'services/dropbox/dbxAuth';
+import { Route, Routes } from 'react-router-dom';
+import SharedLayout from './SharedLayout';
 
 export const App = () => {
   const [files, setFiles] = useState(null);
@@ -59,27 +60,26 @@ export const App = () => {
     return files;
   };
 
-  
-    const setThumbnails = async files => {
-      const paths = getPaths(files);
-      const res = await getThumbnails(paths);
-      const thumbnailsArr = res.result.entries;
+  const setThumbnails = async files => {
+    const paths = getPaths(files);
+    const res = await getThumbnails(paths);
+    const thumbnailsArr = res.result.entries;
 
-      if (thumbnailsArr.length === 0) {
-        return;
-      }
+    if (thumbnailsArr.length === 0) {
+      return;
+    }
 
-      const stateFiles = files;
-      const newStateFiles = [...stateFiles];
+    const stateFiles = files;
+    const newStateFiles = [...stateFiles];
 
-      thumbnailsArr.forEach(file => {
-        let indexToUpdate = stateFiles.findIndex(
-          stateFile => file.metadata.path_lower === stateFile.path_lower
-        );
-        newStateFiles[indexToUpdate].thumbnail = file.thumbnail;
-        setFiles(newStateFiles);
-      });
-    };
+    thumbnailsArr.forEach(file => {
+      let indexToUpdate = stateFiles.findIndex(
+        stateFile => file.metadata.path_lower === stateFile.path_lower
+      );
+      newStateFiles[indexToUpdate].thumbnail = file.thumbnail;
+      setFiles(newStateFiles);
+    });
+  };
 
   const handleDeleteBtnClick = async (name, type, path) => {
     const message = notifyDeleteMessage(type);
@@ -142,19 +142,31 @@ export const App = () => {
   }, [currentPath, isAuthorized]);
 
   return (
-    <>
-      <Toolbar
-        setCurrentPath={setCurrentPath}
-        currentPath={currentPath}
-      ></Toolbar>
-      <Content
-        isAuthorized={isAuthorized}
-        currentPath={currentPath}
-        files={files}
-        handleFolderClick={handleFolderClick}
-        handleDeleteBtnClick={handleDeleteBtnClick}
-        isLoading={isLoading}
-      ></Content>
-    </>
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <SharedLayout
+            setCurrentPath={setCurrentPath}
+            currentPath={currentPath}
+            end
+          />
+        }
+      >
+        <Route
+          index
+          element={
+            <Content
+              isAuthorized={isAuthorized}
+              currentPath={currentPath}
+              files={files}
+              handleFolderClick={handleFolderClick}
+              handleDeleteBtnClick={handleDeleteBtnClick}
+              isLoading={isLoading}
+            />
+          }
+        ></Route>
+      </Route>
+    </Routes>
   );
 };
