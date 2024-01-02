@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   getFiles,
   getThumbnails,
@@ -70,27 +70,6 @@ export const App = () => {
     return files;
   };
 
-  const setThumbnails = async files => {
-    const paths = getPaths(files);
-    const res = await getThumbnails(paths);
-    const thumbnailsArr = res.result.entries;
-
-    if (thumbnailsArr.length === 0) {
-      return;
-    }
-
-    const stateFiles = files;
-    const newStateFiles = [...stateFiles];
-
-    thumbnailsArr.forEach(file => {
-      let indexToUpdate = stateFiles.findIndex(
-        stateFile => file.metadata.path_lower === stateFile.path_lower
-      );
-      newStateFiles[indexToUpdate].thumbnail = file.thumbnail;
-      setFiles(newStateFiles);
-    });
-  };
-
   const handleDeleteBtnClick = async (name, type, path) => {
     const message = notifyDeleteMessage(type);
     Confirm.show(
@@ -107,28 +86,7 @@ export const App = () => {
     );
   };
 
-  useEffect(() => {
-    const init = async () => {
-      setIsLoading(true);
-      try {
-        const data = await getFiles(currentPath);
-        const files = data.result.entries;
-        if (files.length === 0) {
-          setFiles(null);
-          setIsLoading(false);
-          return;
-        }
-        setFiles(files);
-        setThumbnails(files);
-        setIsLoading(false);
-      } catch (error) {
-        Notify.failure(error.message);
-        setIsLoading(false);
-        navigate('notfound');
-      }
-    };
-
-    const setThumbnails = async files => {
+      const setThumbnails = useCallback(async files => {
       const paths = getPaths(files);
       const res = await getThumbnails(paths);
       const thumbnailsArr = res.result.entries;
@@ -150,12 +108,33 @@ export const App = () => {
         newStateFiles[indexToUpdate].thumbnail = file.thumbnail;
         setFiles(newStateFiles);
       });
-    };
+      }, []) 
+  
+      const init = useCallback(async () => {
+      setIsLoading(true);
+      try {
+        const data = await getFiles(currentPath);
+        const files = data.result.entries;
+        if (files.length === 0) {
+          setFiles(null);
+          setIsLoading(false);
+          return;
+        }
+        setFiles(files);
+        setThumbnails(files);
+        setIsLoading(false);
+      } catch (error) {
+        Notify.failure(error.message);
+        setIsLoading(false);
+        navigate('notfound');
+      }
+    },[currentPath, navigate, setThumbnails]) 
+
+  useEffect(() => {
     checkAuthorization().then(result => {
       setIsAuthorised(result);
     result ? init() : navigate('/auth');});
-    
-  }, [currentPath, navigate]);
+  }, [currentPath, navigate, init]);
 
   return (
     <Routes>
