@@ -22,8 +22,6 @@ export const App = () => {
   const encodedPath = pathname === '/' ? '' : pathname;
   const currentPath = decodeURIComponent(encodedPath.replace(/\+/g, ' '));
   const backLinkHref = location.state?.from ?? '/';
-  console.log(location)
-
 
   const getPaths = files => {
     return files
