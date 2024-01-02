@@ -29,7 +29,7 @@ export const getTokenFromURLParams = () => {
 
 export const makeAuth = async () => {
   try {
-    const currentUrl = window.location.href;
+    const currentUrl = `${window.location.origin}/dropbox-explorer-api/`;
     const authUrl = await dbx.auth.getAuthenticationUrl(currentUrl);
     window.location.href = authUrl;
   } catch (err) {

@@ -4,16 +4,24 @@ import {
   getThumbnails,
   deleteFile,
 } from 'services/dropbox/dropboxService';
-import Toolbar from './Toolbar';
-import Content from './Content';
+import Content from '../pages/ContentPage';
 import { Notify, Confirm } from 'notiflix';
 import { checkAuthorization } from 'services/dropbox/dbxAuth';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import SharedLayout from './SharedLayout';
+import NotFoundPage from 'pages/NotFound/';
+import { AuthPage } from 'pages/AuthPage/AuthPage';
 
 export const App = () => {
   const [files, setFiles] = useState(null);
-  const [currentPath, setCurrentPath] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isAuthorized, setIsAuthorized] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const {pathname} = location
+  const encodedPath = pathname === '/' ? '' : pathname;
+  const currentPath = decodeURIComponent(encodedPath.replace(/\+/g, ' '));
+  const backLinkHref = location.state?.from ?? '/';
+  const onGoBack = () => navigate(backLinkHref);
 
   const getPaths = files => {
     return files
@@ -24,13 +32,13 @@ export const App = () => {
       }));
   };
 
-  const handleFolderClick = path => {
-    setCurrentPath(path);
-  };
+  const onMainBtnClick = () => {
+    navigate('')
+  }
 
-  useEffect(() => {
-    checkAuthorization().then(result => setIsAuthorized(result));
-  }, []);
+  const handleFolderClick = path => {
+    navigate(path)
+  };
 
   const notifyDeleteMessage = type => {
     let message;
@@ -59,27 +67,26 @@ export const App = () => {
     return files;
   };
 
-  
-    const setThumbnails = async files => {
-      const paths = getPaths(files);
-      const res = await getThumbnails(paths);
-      const thumbnailsArr = res.result.entries;
+  const setThumbnails = async files => {
+    const paths = getPaths(files);
+    const res = await getThumbnails(paths);
+    const thumbnailsArr = res.result.entries;
 
-      if (thumbnailsArr.length === 0) {
-        return;
-      }
+    if (thumbnailsArr.length === 0) {
+      return;
+    }
 
-      const stateFiles = files;
-      const newStateFiles = [...stateFiles];
+    const stateFiles = files;
+    const newStateFiles = [...stateFiles];
 
-      thumbnailsArr.forEach(file => {
-        let indexToUpdate = stateFiles.findIndex(
-          stateFile => file.metadata.path_lower === stateFile.path_lower
-        );
-        newStateFiles[indexToUpdate].thumbnail = file.thumbnail;
-        setFiles(newStateFiles);
-      });
-    };
+    thumbnailsArr.forEach(file => {
+      let indexToUpdate = stateFiles.findIndex(
+        stateFile => file.metadata.path_lower === stateFile.path_lower
+      );
+      newStateFiles[indexToUpdate].thumbnail = file.thumbnail;
+      setFiles(newStateFiles);
+    });
+  };
 
   const handleDeleteBtnClick = async (name, type, path) => {
     const message = notifyDeleteMessage(type);
@@ -114,6 +121,7 @@ export const App = () => {
       } catch (error) {
         Notify.failure(error.message);
         setIsLoading(false);
+        navigate('notfound');
       }
     };
 
@@ -137,24 +145,39 @@ export const App = () => {
         setFiles(newStateFiles);
       });
     };
-
-    isAuthorized && init();
-  }, [currentPath, isAuthorized]);
+    checkAuthorization().then(result => {
+    result ? init() : navigate('/auth');});
+    
+  }, [currentPath, navigate]);
 
   return (
-    <>
-      <Toolbar
-        setCurrentPath={setCurrentPath}
-        currentPath={currentPath}
-      ></Toolbar>
-      <Content
-        isAuthorized={isAuthorized}
-        currentPath={currentPath}
-        files={files}
-        handleFolderClick={handleFolderClick}
-        handleDeleteBtnClick={handleDeleteBtnClick}
-        isLoading={isLoading}
-      ></Content>
-    </>
+    <Routes>
+      <Route
+        path="*"
+        element={
+          <SharedLayout
+            onMainBtnClick={onMainBtnClick}
+            onGoBack={onGoBack}
+            currentPath={currentPath}
+            end
+          />
+        }
+      >
+        <Route
+          path='*'
+          element={
+            <Content
+              currentPath={currentPath}
+              files={files}
+              handleFolderClick={handleFolderClick}
+              handleDeleteBtnClick={handleDeleteBtnClick}
+              isLoading={isLoading}
+            />
+          } 
+        ></Route>
+        <Route path='auth'  element={<AuthPage/>}></Route>
+        <Route path='notfound' element={<NotFoundPage/>}></Route>
+      </Route>
+    </Routes>
   );
 };
