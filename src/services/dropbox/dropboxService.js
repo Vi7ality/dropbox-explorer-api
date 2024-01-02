@@ -14,6 +14,7 @@ export const getFiles = async (path = '') => {
   } catch (error) {
     if (error.status === 401) {
       localStorage.removeItem('dropboxToken');
+      return;
     }
     Notify.failure(error.message);
   }

@@ -15,7 +15,6 @@ import { AuthPage } from 'pages/AuthPage/AuthPage';
 export const App = () => {
   const [files, setFiles] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  // const [isAuthorized, setIsAuthorized] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const {pathname} = location
@@ -40,10 +39,6 @@ export const App = () => {
   const handleFolderClick = path => {
     navigate(path)
   };
-
-  // useEffect(() => {
-  //   checkAuthorization().then(result => setIsAuthorized(result));
-  // }, []);
 
   const notifyDeleteMessage = type => {
     let message;
