@@ -13,8 +13,6 @@ import { IoMdArrowBack, IoMdHome } from 'react-icons/io';
 
 export const Toolbar = ({
   onMainBtnClick,
-  currentPath,
-  setCurrentPath,
   onGoBack,
 }) => {
   const handleStubClick = () => {

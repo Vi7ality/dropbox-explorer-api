@@ -2,13 +2,10 @@ import Toolbar from 'components/Toolbar';
 import { Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 
-export const SharedLayout = ({ onMainBtnClick, currentPath,
-setCurrentPath, onGoBack}) => {
+export const SharedLayout = ({ onMainBtnClick, onGoBack }) => {
   return (
     <>
-      <Toolbar onMainBtnClick={onMainBtnClick}
-        setCurrentPath={setCurrentPath}
-        currentPath={currentPath} onGoBack={onGoBack} />
+      <Toolbar onMainBtnClick={onMainBtnClick} onGoBack={onGoBack} />
       <Suspense fallback={null}>
         <Outlet />
       </Suspense>

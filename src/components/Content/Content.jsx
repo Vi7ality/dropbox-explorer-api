@@ -1,7 +1,7 @@
 import { FileList } from 'components/FileList/FileList';
 import { Container } from 'reusableComponents/Container/Container.styled';
 import Loader from 'reusableComponents/Loader/Loader.styled';
-import { AuthMessage, AuthMsgWrap, PathWrap, Title } from './Content.styled';
+import { AuthMessage, AuthMsgWrap, PathInfo, PathWrap, Title } from './Content.styled';
 import { StyledButton } from 'reusableComponents/Button/Button.styled';
 import { makeAuth } from 'services/dropbox/dbxAuth';
 
@@ -37,7 +37,7 @@ export const Content = ({
         ) : (
           <>
             <PathWrap>
-              <span>Path: {currentPath ? currentPath : '/'}</span>
+              <PathInfo>Path: {currentPath ? currentPath : '/'}</PathInfo>
             </PathWrap>
             {isLoading ? (
               <Loader />

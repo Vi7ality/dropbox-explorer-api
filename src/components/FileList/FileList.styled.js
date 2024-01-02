@@ -5,6 +5,7 @@ export const FileListStyled = styled.ul`
 `;
 
 export const FileItem = styled.li`
+  justify-content: space-between;
   &:not(:last-child) {
     margin-bottom: 20px;
   }
