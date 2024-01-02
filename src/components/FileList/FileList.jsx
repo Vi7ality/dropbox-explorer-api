@@ -3,7 +3,7 @@ import { File } from '../File/File'
 import { Folder } from '../Folder/Folder'
 import {MdDeleteForever } from 'react-icons/md'
 
-export const FileList = ({ files, handleFolderClick, handleDeleteBtnClick }) => {
+export const FileList = ({ files, handleDeleteBtnClick }) => {
 
     return (
         <FileListStyled>
@@ -26,7 +26,6 @@ export const FileList = ({ files, handleFolderClick, handleDeleteBtnClick }) => 
                           )}
                           {type === 'folder' && (
                             <Folder
-                              handleFolderClick={handleFolderClick}
                               name={file.name}
                               path={file.path_lower}
                             ></Folder>

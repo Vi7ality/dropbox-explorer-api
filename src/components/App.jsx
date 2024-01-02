@@ -22,6 +22,7 @@ export const App = () => {
   const encodedPath = pathname === '/' ? '' : pathname;
   const currentPath = decodeURIComponent(encodedPath.replace(/\+/g, ' '));
   const backLinkHref = location.state?.from ?? '/';
+  console.log(location)
 
 
   const getPaths = files => {
@@ -33,15 +34,11 @@ export const App = () => {
       }));
   };
 
-   const onGoBack = () => { isAuthorised && navigate(backLinkHref)};
+   const onGoBack = () => {  navigate(backLinkHref)};
 
   const onMainBtnClick = () => {
     isAuthorised && navigate('')
   }
-
-  const handleFolderClick = path => {
-    navigate(path)
-  };
 
   const notifyDeleteMessage = type => {
     let message;
@@ -133,7 +130,9 @@ export const App = () => {
   useEffect(() => {
     checkAuthorization().then(result => {
       setIsAuthorised(result);
-    result ? init() : navigate('/auth');});
+      result ? init() : navigate('/auth')
+    }
+    );
   }, [currentPath, navigate, init]);
 
   return (
@@ -155,7 +154,6 @@ export const App = () => {
             <Content
               currentPath={currentPath}
               files={files}
-              handleFolderClick={handleFolderClick}
               handleDeleteBtnClick={handleDeleteBtnClick}
               isLoading={isLoading}
             />
