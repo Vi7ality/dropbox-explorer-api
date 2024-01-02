@@ -141,6 +141,9 @@ export const App = () => {
       const newStateFiles = [...stateFiles];
 
       thumbnailsArr.forEach(file => {
+        if (file['.tag'] === 'failure') {
+          return
+        }
         let indexToUpdate = stateFiles.findIndex(
           stateFile => file.metadata.path_lower === stateFile.path_lower
         );
