@@ -10,6 +10,8 @@ import {
 import { Notify } from 'notiflix';
 import { StyledButton } from 'reusableComponents/Button/Button.styled';
 import { IoMdArrowBack, IoMdHome } from 'react-icons/io';
+import { FaUser } from "react-icons/fa";
+
 
 export const Toolbar = ({
   onMainBtnClick,
@@ -42,7 +44,8 @@ export const Toolbar = ({
           </NavList>
           <NavList>
             <StubItem>
-              <Stub onClick={() => handleStubClick()}>User</Stub>
+
+              <Stub onClick={() => handleStubClick()}><FaUser/>User</Stub>
             </StubItem>
             <StubItem>
               <Stub onClick={() => handleStubClick()}>Options</Stub>
