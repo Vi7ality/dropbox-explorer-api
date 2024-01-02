@@ -3,7 +3,7 @@ import { Header, NavItem, NavList, Navigation, Stub, StubItem } from './Toolbar.
 import { Notify } from 'notiflix';
 import { StyledButton } from 'reusableComponents/Button/Button.styled';
 
-export const Toolbar = ({ setCurrentPath, currentPath }) => {
+export const Toolbar = ({ onMainBtnClick, currentPath, setCurrentPath }) => {
   const handleStubClick = () => {
     Notify.warning('Not implemented');
   };
@@ -15,16 +15,18 @@ export const Toolbar = ({ setCurrentPath, currentPath }) => {
             <NavItem>
               <StyledButton
                 onClick={() =>
-                  setCurrentPath(
+                  {setCurrentPath(
                     currentPath.substring(0, currentPath.lastIndexOf('/'))
-                  )
+                )
+
+}
                 }
               >
                 Back
               </StyledButton>
             </NavItem>
             <NavItem>
-              <StyledButton onClick={() => setCurrentPath('')}>Main</StyledButton>
+              <StyledButton onClick={() => onMainBtnClick()}>Main</StyledButton>
             </NavItem>
 
           </NavList>

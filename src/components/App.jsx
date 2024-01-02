@@ -7,14 +7,20 @@ import {
 import Content from './Content';
 import { Notify, Confirm } from 'notiflix';
 import { checkAuthorization } from 'services/dropbox/dbxAuth';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import SharedLayout from './SharedLayout';
 
 export const App = () => {
   const [files, setFiles] = useState(null);
-  const [currentPath, setCurrentPath] = useState('');
+  // const [currentPath, setCurrentPath] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isAuthorized, setIsAuthorized] = useState(false);
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+const currentPath = pathname === '/' ? '' : pathname;
+  // const backLinkHref = location.state?.from ?? '/';
+
+  // const onGoBack = () => navigate(backLinkHref);
 
   const getPaths = files => {
     return files
@@ -25,8 +31,14 @@ export const App = () => {
       }));
   };
 
+  const onMainBtnClick = () => {
+    // setCurrentPath('');
+    navigate('')
+  }
+
   const handleFolderClick = path => {
-    setCurrentPath(path);
+    // setCurrentPath(path);
+    navigate(path)
   };
 
   useEffect(() => {
@@ -103,6 +115,7 @@ export const App = () => {
       try {
         const data = await getFiles(currentPath);
         const files = data.result.entries;
+        console.log('files:', files)
         if (files.length === 0) {
           setFiles(null);
           setIsLoading(false);
@@ -144,17 +157,19 @@ export const App = () => {
   return (
     <Routes>
       <Route
-        path="/"
+        path="*"
         element={
           <SharedLayout
-            setCurrentPath={setCurrentPath}
+            onMainBtnClick={onMainBtnClick}
+            // onGoBack={onGoBack}
+            // setCurrentPath={setCurrentPath}
             currentPath={currentPath}
             end
           />
         }
       >
         <Route
-          index
+          path='*'
           element={
             <Content
               isAuthorized={isAuthorized}
@@ -164,7 +179,7 @@ export const App = () => {
               handleDeleteBtnClick={handleDeleteBtnClick}
               isLoading={isLoading}
             />
-          }
+          } 
         ></Route>
       </Route>
     </Routes>
