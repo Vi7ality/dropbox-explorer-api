@@ -1,15 +1,15 @@
 import { AiFillFolder } from "react-icons/ai";
-import { StyledFolderBtn } from "./Folder.styled";
+import {  StyledFolderLink } from "./Folder.styled";
+import {  useLocation } from "react-router-dom";
 
-export const Folder = ({name, path, handleFolderClick}) => {
+export const Folder = ({ name, path }) => {
+  const location = useLocation();
   return (
-    <StyledFolderBtn
-      onClick={() => {
-        handleFolderClick(path);
-      }}
+    <StyledFolderLink
+   to={path} state={{from:location}}
     >
       <AiFillFolder />
       <p>{name}</p>
-    </StyledFolderBtn>
+    </StyledFolderLink>
   );
 };

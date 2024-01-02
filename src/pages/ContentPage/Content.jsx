@@ -9,7 +9,6 @@ import {
 export const Content = ({
   currentPath,
   files,
-  handleFolderClick,
   handleDeleteBtnClick,
   isLoading,
 }) => {
@@ -25,7 +24,6 @@ export const Content = ({
         ) : (
           <FileList
             files={files}
-            handleFolderClick={handleFolderClick}
             handleDeleteBtnClick={handleDeleteBtnClick}
           ></FileList>
         )}
