@@ -1,9 +1,22 @@
 import { Container } from 'reusableComponents/Container/Container.styled';
-import { Header, NavItem, NavList, Navigation, Stub, StubItem } from './Toolbar.styled';
+import {
+  Header,
+  NavItem,
+  NavList,
+  Navigation,
+  Stub,
+  StubItem,
+} from './Toolbar.styled';
 import { Notify } from 'notiflix';
 import { StyledButton } from 'reusableComponents/Button/Button.styled';
+import { IoMdArrowBack, IoMdHome } from 'react-icons/io';
 
-export const Toolbar = ({ onMainBtnClick, currentPath, setCurrentPath }) => {
+export const Toolbar = ({
+  onMainBtnClick,
+  currentPath,
+  setCurrentPath,
+  onGoBack,
+}) => {
   const handleStubClick = () => {
     Notify.warning('Not implemented');
   };
@@ -14,30 +27,29 @@ export const Toolbar = ({ onMainBtnClick, currentPath, setCurrentPath }) => {
           <NavList>
             <NavItem>
               <StyledButton
-                onClick={() =>
-                  {setCurrentPath(
-                    currentPath.substring(0, currentPath.lastIndexOf('/'))
-                )
-
-}
-                }
+                onClick={() => {
+                  onGoBack();
+                }}
               >
+                <IoMdArrowBack />
                 Back
               </StyledButton>
             </NavItem>
             <NavItem>
-              <StyledButton onClick={() => onMainBtnClick()}>Main</StyledButton>
+              <StyledButton onClick={() => onMainBtnClick()}>
+                <IoMdHome />
+                Main
+              </StyledButton>
             </NavItem>
-
           </NavList>
           <NavList>
-                   <StubItem>
+            <StubItem>
               <Stub onClick={() => handleStubClick()}>User</Stub>
             </StubItem>
             <StubItem>
               <Stub onClick={() => handleStubClick()}>Options</Stub>
             </StubItem>
-            </NavList>
+          </NavList>
         </Navigation>
       </Container>
     </Header>

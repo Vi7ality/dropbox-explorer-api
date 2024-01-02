@@ -16,12 +16,13 @@ export const App = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isAuthorized, setIsAuthorized] = useState(false);
   const navigate = useNavigate();
-  const { pathname } = useLocation();
+  const location = useLocation();
+  const {pathname} = location
   const encodedPath = pathname === '/' ? '' : pathname;
   const currentPath = decodeURIComponent(encodedPath.replace(/\+/g, ' '));
-  // const backLinkHref = location.state?.from ?? '/';
+  const backLinkHref = location.state?.from ?? '/';
 
-  // const onGoBack = () => navigate(backLinkHref);
+  const onGoBack = () => navigate(backLinkHref);
 
   const getPaths = files => {
     return files
@@ -162,7 +163,7 @@ export const App = () => {
         element={
           <SharedLayout
             onMainBtnClick={onMainBtnClick}
-            // onGoBack={onGoBack}
+            onGoBack={onGoBack}
             // setCurrentPath={setCurrentPath}
             currentPath={currentPath}
             end
