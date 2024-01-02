@@ -4,7 +4,7 @@ import { Folder } from '../Folder/Folder'
 import {MdDeleteForever } from 'react-icons/md'
 
 export const FileList = ({ files, handleFolderClick, handleDeleteBtnClick }) => {
-  
+
     return (
         <FileListStyled>
                   {!files ? (
