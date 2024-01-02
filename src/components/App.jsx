@@ -17,7 +17,8 @@ export const App = () => {
   const [isAuthorized, setIsAuthorized] = useState(false);
   const navigate = useNavigate();
   const { pathname } = useLocation();
-const currentPath = pathname === '/' ? '' : pathname;
+  const encodedPath = pathname === '/' ? '' : pathname;
+  const currentPath = decodeURIComponent(encodedPath.replace(/\+/g, ' '));
   // const backLinkHref = location.state?.from ?? '/';
 
   // const onGoBack = () => navigate(backLinkHref);
