@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/dropbox-explorer-api/static/css/main.695142aa.css",
-    "main.js": "/dropbox-explorer-api/static/js/main.ed2dc060.js",
+    "main.js": "/dropbox-explorer-api/static/js/main.d3fb9fda.js",
     "index.html": "/dropbox-explorer-api/index.html",
     "main.695142aa.css.map": "/dropbox-explorer-api/static/css/main.695142aa.css.map",
-    "main.ed2dc060.js.map": "/dropbox-explorer-api/static/js/main.ed2dc060.js.map"
+    "main.d3fb9fda.js.map": "/dropbox-explorer-api/static/js/main.d3fb9fda.js.map"
   },
   "entrypoints": [
     "static/css/main.695142aa.css",
-    "static/js/main.ed2dc060.js"
+    "static/js/main.d3fb9fda.js"
   ]
 }
