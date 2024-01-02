@@ -15,13 +15,14 @@ import { AuthPage } from 'pages/AuthPage/AuthPage';
 export const App = () => {
   const [files, setFiles] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isAuthorised, setIsAuthorised] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const {pathname} = location
   const encodedPath = pathname === '/' ? '' : pathname;
   const currentPath = decodeURIComponent(encodedPath.replace(/\+/g, ' '));
   const backLinkHref = location.state?.from ?? '/';
-  const onGoBack = () => navigate(backLinkHref);
+
 
   const getPaths = files => {
     return files
@@ -32,8 +33,10 @@ export const App = () => {
       }));
   };
 
+   const onGoBack = () => { isAuthorised && navigate(backLinkHref)};
+
   const onMainBtnClick = () => {
-    navigate('')
+    isAuthorised && navigate('')
   }
 
   const handleFolderClick = path => {
@@ -146,6 +149,7 @@ export const App = () => {
       });
     };
     checkAuthorization().then(result => {
+      setIsAuthorised(result);
     result ? init() : navigate('/auth');});
     
   }, [currentPath, navigate]);
