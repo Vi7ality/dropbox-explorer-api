@@ -2,8 +2,15 @@ import { FileItem, FileListStyled } from './FileList.styled'
 import { File } from '../File/File'
 import { Folder } from '../Folder/Folder'
 import {MdDeleteForever } from 'react-icons/md'
+import React from 'react'
+import { FileType } from 'components/App.types'
 
-export const FileList = ({ files, handleDeleteBtnClick }) => {
+type Proops = {
+  files: FileType[],
+  handleDeleteBtnClick: (name: string, type: string, path: string) => void,
+}
+
+export const FileList:React.FC<Proops> = ({ files, handleDeleteBtnClick }) => {
 
     return (
         <FileListStyled>

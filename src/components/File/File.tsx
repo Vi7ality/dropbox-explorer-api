@@ -1,9 +1,15 @@
 import { AiFillFile } from 'react-icons/ai';
 import {  StyledFileLink } from './File.styled';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getFile } from 'services/dropbox/dropboxService';
 
-export const File = ({ name, thumbnail, path }) => {
+type Proops = {
+  name: string, 
+  thumbnail?: string,
+  path: string
+}
+
+export const File: React.FC<Proops> = ({ name, thumbnail, path }) => {
     const [link, setLink] = useState('')
     useEffect(() => {
         const init = async () => {

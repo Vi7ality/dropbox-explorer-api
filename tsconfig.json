@@ -16,7 +16,6 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "baseUrl": "src",
-    "types":["@types/styled-components",]
   },
   "include": ["src", "@types"]
 }

@@ -8,10 +8,10 @@ import {
 import React from 'react';
 import { FileType } from 'components/App.types';
 
-interface Proops {
+type Proops = {
   currentPath: String,
-  files: FileType,
-  handleDeleteBtnClick: () => void,
+  files: FileType[],
+  handleDeleteBtnClick: (name: string, type: string, path: string) => void,
   isLoading: boolean
   
 }

@@ -15,8 +15,6 @@ import { AuthPage } from 'pages/AuthPage/AuthPage';
 import React from 'react';
 import { FileType } from './App.types';
 
-
-
 export const App: React.FC = () => {
   const [files, setFiles] = useState<FileType[] | []>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -25,10 +23,11 @@ export const App: React.FC = () => {
   const location = useLocation();
   const { pathname } = location;
   const encodedPath = pathname === '/' ? '' : pathname;
-  const currentPath:string = decodeURIComponent(encodedPath.replace(/\+/g, ' '));
-  const backLinkHref = location.state?.from ?? '/';
+  const currentPath: string = decodeURIComponent(
+    encodedPath.replace(/\+/g, ' ')
+  );
 
-  const getPaths = (files: FileType[]): { path: string, size: string }[] => {
+  const getPaths = (files: FileType[]): { path: string; size: string }[] => {
     return files
       .filter(file => file['.tag'] === 'file')
       .map(file => ({
@@ -37,33 +36,22 @@ export const App: React.FC = () => {
       }));
   };
 
-  const onGoBack = () => {
-    navigate(backLinkHref);
-  };
-
-  const onMainBtnClick = () => {
-    isAuthorised && navigate('');
-  };
-
-  const handleDeleteBtnClick = async (name: string, type: string, path: string) => {
+  const handleDeleteBtnClick = async (
+    name: string,
+    type: string,
+    path: string
+  ) => {
     const message = notifyDeleteMessage(type);
-    Confirm.show(
-      message as string,
-      `${name}`,
-      'Yes',
-      'No',
-      async () => {
-        await deleteFile(path);
-        const files: FileType[] = await updateStateFiles();
-        setThumbnails(files);
-      },
-      // {}
-    );
+    Confirm.show(message as string, `${name}`, 'Yes', 'No', async () => {
+      await deleteFile(path);
+      const files: FileType[] = await updateStateFiles();
+      setThumbnails(files);
+    });
   };
 
   const updateStateFiles = async () => {
     const data = await getFiles(currentPath);
-    const files: any= data?.result.entries || '';
+    const files: any = data?.result.entries || '';
     if (files?.length === 0) {
       setFiles([]);
       return;
@@ -81,7 +69,7 @@ export const App: React.FC = () => {
       return;
     }
 
-    const stateFiles:FileType[] = files;
+    const stateFiles: FileType[] = files;
     const newStateFiles: FileType[] = [...stateFiles];
 
     thumbnailsArr?.forEach((thumb: any) => {
@@ -89,12 +77,13 @@ export const App: React.FC = () => {
         return;
       }
       let indexToUpdate = stateFiles.findIndex(
-        (stateFile:FileType) => thumb.metadata.path_lower === stateFile.path_lower
+        (stateFile: FileType) =>
+          thumb.metadata.path_lower === stateFile.path_lower
       );
       if (indexToUpdate !== -1) {
         newStateFiles[indexToUpdate].thumbnail = thumb.thumbnail;
       }
-      
+
       setFiles(newStateFiles);
     });
   }, []);
@@ -103,19 +92,19 @@ export const App: React.FC = () => {
     setIsLoading(true);
     try {
       const data = await getFiles(currentPath);
-      const files:any = data?.result.entries;
-      
+      const files: any = data?.result.entries;
+
       if (files?.length === 0) {
         setFiles([]);
         setIsLoading(false);
+        navigate('notfound');
         return;
       }
 
-            setFiles(files);
+      setFiles(files);
       setThumbnails(files);
       setIsLoading(false);
-
-    } catch (error:any) {
+    } catch (error: any) {
       Notify.failure(error.message);
       setIsLoading(false);
       navigate('notfound');
@@ -126,23 +115,15 @@ export const App: React.FC = () => {
     checkAuthorization().then((result: boolean | undefined) => {
       if (typeof result === 'boolean') {
         setIsAuthorised(result);
-      };
-      
+      }
+
       result ? init() : navigate('/auth');
     });
   }, [currentPath, navigate, init]);
 
   return (
     <Routes>
-      <Route
-        path="*"
-        element={
-          <SharedLayout
-            onMainBtnClick={onMainBtnClick}
-            onGoBack={onGoBack}
-          />
-        }
-      >
+      <Route path="*" element={<SharedLayout isAuthorised={isAuthorised} />}>
         <Route
           path="*"
           element={
