@@ -1,8 +1,12 @@
 # Dropbox explorer App
 
-This project was bootstrapped with
+This project was created with
 [Create React App](https://github.com/facebook/create-react-app).
+Based on TypeScript.
+routing by React-router.
+Styled by Styled-component.
 All Dropbox REST API are processed by Dropbox SDK.
+
 
 The app allow to explore your dropbox storage and download files from the storage.
 
