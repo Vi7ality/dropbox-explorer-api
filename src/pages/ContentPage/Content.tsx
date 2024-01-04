@@ -5,8 +5,18 @@ import {
   PathInfo,
   PathWrap,
 } from './Content.styled';
+import React from 'react';
+import { FileType } from 'components/App.types';
 
-export const Content = ({
+interface Proops {
+  currentPath: String,
+  files: FileType,
+  handleDeleteBtnClick: () => void,
+  isLoading: boolean
+  
+}
+
+export const Content:React.FC<Proops> = ({
   currentPath,
   files,
   handleDeleteBtnClick,

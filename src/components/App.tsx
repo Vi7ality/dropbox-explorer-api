@@ -12,27 +12,13 @@ import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import SharedLayout from './SharedLayout';
 import NotFoundPage from 'pages/NotFound/';
 import { AuthPage } from 'pages/AuthPage/AuthPage';
+import React from 'react';
+import { FileType } from './App.types';
 
-interface File  {
-  ['.tag']: string,
-  id: string,
-  name: string,
-  path_display: string, 
-  path_lower: string,
-  thumbnail?: string
-}
 
-interface Thumbnail {
-  ['.tag']: string,
-  metadata: {
-    path_lower: string,
-    [key: string]: any
-  }
-  thumbnail: string
-}
 
-export const App = () => {
-  const [files, setFiles] = useState<File[] | []>([]);
+export const App: React.FC = () => {
+  const [files, setFiles] = useState<FileType[] | []>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isAuthorised, setIsAuthorised] = useState(false);
   const navigate = useNavigate();
@@ -42,7 +28,7 @@ export const App = () => {
   const currentPath:string = decodeURIComponent(encodedPath.replace(/\+/g, ' '));
   const backLinkHref = location.state?.from ?? '/';
 
-  const getPaths = (files: File[]): { path: string, size: string }[] => {
+  const getPaths = (files: FileType[]): { path: string, size: string }[] => {
     return files
       .filter(file => file['.tag'] === 'file')
       .map(file => ({
@@ -68,7 +54,7 @@ export const App = () => {
       'No',
       async () => {
         await deleteFile(path);
-        const files: File[] = await updateStateFiles();
+        const files: FileType[] = await updateStateFiles();
         setThumbnails(files);
       },
       // {}
@@ -86,7 +72,7 @@ export const App = () => {
     return files;
   };
 
-  const setThumbnails = useCallback(async (files: File[]) => {
+  const setThumbnails = useCallback(async (files: FileType[]) => {
     const paths = getPaths(files);
     const res = await getThumbnails(paths);
     const thumbnailsArr = res?.result.entries;
@@ -95,15 +81,15 @@ export const App = () => {
       return;
     }
 
-    const stateFiles:File[] = files;
-    const newStateFiles: File[] = [...stateFiles];
+    const stateFiles:FileType[] = files;
+    const newStateFiles: FileType[] = [...stateFiles];
 
     thumbnailsArr?.forEach((thumb: any) => {
       if (thumb['.tag'] === 'failure') {
         return;
       }
       let indexToUpdate = stateFiles.findIndex(
-        (stateFile:File) => thumb.metadata.path_lower === stateFile.path_lower
+        (stateFile:FileType) => thumb.metadata.path_lower === stateFile.path_lower
       );
       if (indexToUpdate !== -1) {
         newStateFiles[indexToUpdate].thumbnail = thumb.thumbnail;
