@@ -11,12 +11,24 @@ import { Notify } from 'notiflix';
 import { StyledButton } from 'reusableComponents/Button/Button.styled';
 import { IoMdArrowBack, IoMdHome } from 'react-icons/io';
 import { FaUser } from "react-icons/fa";
+import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
+type Proops = {
+  isAuthorised: Boolean
+}
 
-export const Toolbar = ({
-  onMainBtnClick,
-  onGoBack,
-}) => {
+export const Toolbar: React.FC<Proops> = ({ isAuthorised }) => {
+   const location = useLocation();
+  const backLinkHref = location.state?.from ?? '/';
+    const navigate = useNavigate();
+    const onGoBack = () => {
+    navigate(backLinkHref);
+  };
+
+  const onMainBtnClick = () => {
+    isAuthorised && navigate('');
+  };
   const handleStubClick = () => {
     Notify.warning('Not implemented');
   };

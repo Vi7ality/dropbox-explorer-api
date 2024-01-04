@@ -1,13 +1,17 @@
 import { Title } from 'pages/ContentPage/Content.styled';
 import Toolbar from 'components/Toolbar';
-import { Suspense } from 'react';
+import React, { Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Container } from 'reusableComponents/Container/Container.styled';
 
-export const SharedLayout = ({ onMainBtnClick, onGoBack }) => {
+type Proops = {
+isAuthorised: Boolean
+}
+
+export const SharedLayout:React.FC<Proops> = ({ isAuthorised }) => {
   return (
     <>
-      <Toolbar onMainBtnClick={onMainBtnClick} onGoBack={onGoBack} />
+      <Toolbar isAuthorised={isAuthorised} />
             <Container>
         <Title>File Explorer</Title>
         
