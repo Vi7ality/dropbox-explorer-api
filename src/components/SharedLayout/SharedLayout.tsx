@@ -4,7 +4,12 @@ import { Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Container } from 'reusableComponents/Container/Container.styled';
 
-export const SharedLayout = ({ onMainBtnClick, onGoBack }) => {
+type Proops = {
+  onMainBtnClick: Function;
+  onGoBack: Function;
+}
+
+export const SharedLayout = ({ onMainBtnClick, onGoBack }: Proops) => {
   return (
     <>
       <Toolbar onMainBtnClick={onMainBtnClick} onGoBack={onGoBack} />

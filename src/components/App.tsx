@@ -13,23 +13,33 @@ import SharedLayout from './SharedLayout';
 import NotFoundPage from 'pages/NotFound/';
 import { AuthPage } from 'pages/AuthPage/AuthPage';
 
+interface File  {
+  ['.tag']: string,
+  id: string,
+  name: string,
+  path_display: string, 
+  path_lower: string
+}
+
+
+
 
 export const App = () => {
-  const [files, setFiles] = useState(null);
+  const [files, setFiles] = useState<File | []>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isAuthorised, setIsAuthorised] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const { pathname } = location;
   const encodedPath = pathname === '/' ? '' : pathname;
-  const currentPath = decodeURIComponent(encodedPath.replace(/\+/g, ' '));
+  const currentPath:string = decodeURIComponent(encodedPath.replace(/\+/g, ' '));
   const backLinkHref = location.state?.from ?? '/';
 
-  const getPaths = files => {
+  const getPaths = (files: File[]): { path: string, size: string }[] => {
     return files
       .filter(file => file['.tag'] === 'file')
       .map(file => ({
-        path: file.path_lower,
+        path: file['path_lower'],
         size: 'w32h32',
       }));
   };
@@ -42,53 +52,56 @@ export const App = () => {
     isAuthorised && navigate('');
   };
 
-  const handleDeleteBtnClick = async (name, type, path) => {
+  const handleDeleteBtnClick = async (name: string, type: string, path: string) => {
     const message = notifyDeleteMessage(type);
     Confirm.show(
-      message,
+      message as string,
       `${name}`,
       'Yes',
       'No',
       async () => {
         await deleteFile(path);
-        const files = await updateStateFiles();
-        await setThumbnails(files);
+        const files:File[] = await updateStateFiles();
+        setThumbnails(files);
       },
-      {}
+      // {}
     );
   };
 
   const updateStateFiles = async () => {
     const data = await getFiles(currentPath);
-    const files = data.result.entries;
-    if (files.length === 0) {
-      setFiles(null);
+    const files:any = data?.result.entries || '';
+    if (files?.length === 0) {
+      setFiles([]);
       return;
     }
     setFiles(files);
     return files;
   };
 
-  const setThumbnails = useCallback(async files => {
+  const setThumbnails = useCallback(async (files: any) => {
     const paths = getPaths(files);
     const res = await getThumbnails(paths);
-    const thumbnailsArr = res.result.entries;
+    const thumbnailsArr = res?.result.entries;
 
-    if (thumbnailsArr.length === 0) {
+    if (thumbnailsArr?.length === 0) {
       return;
     }
 
-    const stateFiles = files;
-    const newStateFiles = [...stateFiles];
+    const stateFiles:[] = files;
+    const newStateFiles:any = [...stateFiles];
 
-    thumbnailsArr.forEach(file => {
+    thumbnailsArr?.forEach((file: any) => {
       if (file['.tag'] === 'failure') {
         return;
       }
       let indexToUpdate = stateFiles.findIndex(
-        stateFile => file.metadata.path_lower === stateFile.path_lower
+        (stateFile:File) => file.metadata.path_lower === stateFile.path_lower
       );
-      newStateFiles[indexToUpdate].thumbnail = file.thumbnail;
+      if (indexToUpdate !== -1) {
+        newStateFiles[indexToUpdate].thumbnail = file.thumbnail;
+      }
+      
       setFiles(newStateFiles);
     });
   }, []);
@@ -97,16 +110,18 @@ export const App = () => {
     setIsLoading(true);
     try {
       const data = await getFiles(currentPath);
-      const files = data.result.entries;
-      if (files.length === 0) {
-        setFiles(null);
+      const files: any = data?.result.entries;
+      console.log(files);
+      if (files?.length === 0) {
+        setFiles([]);
         setIsLoading(false);
         return;
       }
+      
       setFiles(files);
       setThumbnails(files);
       setIsLoading(false);
-    } catch (error) {
+    } catch (error:any) {
       Notify.failure(error.message);
       setIsLoading(false);
       navigate('notfound');
@@ -114,7 +129,7 @@ export const App = () => {
   }, [currentPath, navigate, setThumbnails]);
 
   useEffect(() => {
-    checkAuthorization().then(result => {
+    checkAuthorization().then((result:any) => {
       setIsAuthorised(result);
       result ? init() : navigate('/auth');
     });
@@ -128,8 +143,6 @@ export const App = () => {
           <SharedLayout
             onMainBtnClick={onMainBtnClick}
             onGoBack={onGoBack}
-            currentPath={currentPath}
-            end
           />
         }
       >
