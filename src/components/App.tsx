@@ -18,14 +18,21 @@ interface File  {
   id: string,
   name: string,
   path_display: string, 
-  path_lower: string
+  path_lower: string,
+  thumbnail?: string
 }
 
-
-
+interface Thumbnail {
+  ['.tag']: string,
+  metadata: {
+    path_lower: string,
+    [key: string]: any
+  }
+  thumbnail: string
+}
 
 export const App = () => {
-  const [files, setFiles] = useState<File | []>([]);
+  const [files, setFiles] = useState<File[] | []>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isAuthorised, setIsAuthorised] = useState(false);
   const navigate = useNavigate();
@@ -61,7 +68,7 @@ export const App = () => {
       'No',
       async () => {
         await deleteFile(path);
-        const files:File[] = await updateStateFiles();
+        const files: File[] = await updateStateFiles();
         setThumbnails(files);
       },
       // {}
@@ -70,7 +77,7 @@ export const App = () => {
 
   const updateStateFiles = async () => {
     const data = await getFiles(currentPath);
-    const files:any = data?.result.entries || '';
+    const files: any= data?.result.entries || '';
     if (files?.length === 0) {
       setFiles([]);
       return;
@@ -79,7 +86,7 @@ export const App = () => {
     return files;
   };
 
-  const setThumbnails = useCallback(async (files: any) => {
+  const setThumbnails = useCallback(async (files: File[]) => {
     const paths = getPaths(files);
     const res = await getThumbnails(paths);
     const thumbnailsArr = res?.result.entries;
@@ -88,18 +95,18 @@ export const App = () => {
       return;
     }
 
-    const stateFiles:[] = files;
-    const newStateFiles:any = [...stateFiles];
+    const stateFiles:File[] = files;
+    const newStateFiles: File[] = [...stateFiles];
 
-    thumbnailsArr?.forEach((file: any) => {
-      if (file['.tag'] === 'failure') {
+    thumbnailsArr?.forEach((thumb: any) => {
+      if (thumb['.tag'] === 'failure') {
         return;
       }
       let indexToUpdate = stateFiles.findIndex(
-        (stateFile:File) => file.metadata.path_lower === stateFile.path_lower
+        (stateFile:File) => thumb.metadata.path_lower === stateFile.path_lower
       );
       if (indexToUpdate !== -1) {
-        newStateFiles[indexToUpdate].thumbnail = file.thumbnail;
+        newStateFiles[indexToUpdate].thumbnail = thumb.thumbnail;
       }
       
       setFiles(newStateFiles);
@@ -110,17 +117,18 @@ export const App = () => {
     setIsLoading(true);
     try {
       const data = await getFiles(currentPath);
-      const files: any = data?.result.entries;
-      console.log(files);
+      const files:any = data?.result.entries;
+      
       if (files?.length === 0) {
         setFiles([]);
         setIsLoading(false);
         return;
       }
-      
-      setFiles(files);
+
+            setFiles(files);
       setThumbnails(files);
       setIsLoading(false);
+
     } catch (error:any) {
       Notify.failure(error.message);
       setIsLoading(false);
@@ -129,8 +137,11 @@ export const App = () => {
   }, [currentPath, navigate, setThumbnails]);
 
   useEffect(() => {
-    checkAuthorization().then((result:any) => {
-      setIsAuthorised(result);
+    checkAuthorization().then((result: boolean | undefined) => {
+      if (typeof result === 'boolean') {
+        setIsAuthorised(result);
+      };
+      
       result ? init() : navigate('/auth');
     });
   }, [currentPath, navigate, init]);
