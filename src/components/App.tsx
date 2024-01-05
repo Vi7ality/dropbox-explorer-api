@@ -97,7 +97,6 @@ export const App: React.FC = () => {
       if (files?.length === 0) {
         setFiles([]);
         setIsLoading(false);
-        navigate('notfound');
         return;
       }
 

@@ -2,7 +2,7 @@ import { Dropbox } from 'dropbox';
 import { Notify } from 'notiflix';
 const APP_KEY = 'vq4cbzcxcd6v3uz';
 
-const dbx = new Dropbox({ clientId: APP_KEY });
+const dbx:any = new Dropbox({ clientId: APP_KEY });
 
 export const checkAuthorization = async () => {
   try {
@@ -17,7 +17,7 @@ export const checkAuthorization = async () => {
       }
     }
     return true;
-  } catch (err) {
+  } catch (err:any) {
     Notify.failure(err.message);
   }
 };
@@ -32,16 +32,16 @@ export const makeAuth = async () => {
     const currentUrl = `${window.location.origin}/dropbox-explorer-api/`;
     const authUrl = await dbx.auth.getAuthenticationUrl(currentUrl);
     window.location.href = authUrl;
-  } catch (err) {
+  } catch (err: any) {
     Notify.failure(err.message);
   }
 };
 
-const setAndSaveToken = async token => {
+const setAndSaveToken = async (token: string )=> {
   try {
     await dbx.auth.setAccessToken(token);
     localStorage.setItem('dropboxToken', token);
-  } catch (err) {
+  } catch (err: any) {
     Notify.failure(err.message);
   }
 };

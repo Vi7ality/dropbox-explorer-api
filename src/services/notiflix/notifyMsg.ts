@@ -1,4 +1,4 @@
-export const notifyDeleteMessage = type => {
+export const notifyDeleteMessage = (type: string) => {
   let message;
   switch (type) {
     case 'file':
