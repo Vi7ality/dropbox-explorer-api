@@ -38,7 +38,7 @@
     "build": "craco build",
     "test": "craco test",
     "eject": "craco eject",
-    "lint:ts": "eslint src/**/*.{ts,tsx}"
+    "lint:js": "eslint src/**/*.{ts,tsx}"
   },
   "eslintConfig": {
     "extends": [
